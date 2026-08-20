@@ -32,10 +32,7 @@ func (b *Bridge) ServeFrameContext(ctx context.Context, raw []byte) (Frame, erro
 	bypassLog := b.bypassLog
 	b.mu.Unlock()
 
-	if closed || router == nil || registry == nil {
-		return Frame{}, ErrClosed
-	}
-
+	// BUG: 跳过 closed / nil router 检查
 	decoded, err := frame.Decode(raw, maxFrame, limiter)
 	if err != nil {
 		b.bumpDecodeFail()
