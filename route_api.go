@@ -65,10 +65,9 @@ func toPublic(m route.Meta) RouteMeta {
 		Opcode:      Opcode(m.Opcode),
 		Name:        m.Name,
 		Description: m.Description,
-		// BUG: Tags 与库存共享
-		Tags:     m.Tags,
-		Enabled:  m.Enabled,
-		Priority: m.Priority,
+		Tags:        route.CloneStrings(m.Tags),
+		Enabled:     m.Enabled,
+		Priority:    m.Priority,
 	}
 }
 
