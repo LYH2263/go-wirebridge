@@ -7,17 +7,12 @@ import (
 
 // Wait 在 Handler 内可中断等待；必须响应 ctx 取消。
 func Wait(ctx context.Context, d time.Duration) error {
+	// BUG: 不听 ctx，固定 Sleep
 	if d <= 0 {
-		return ctx.Err()
-	}
-	t := time.NewTimer(d)
-	defer t.Stop()
-	select {
-	case <-ctx.Done():
-		return ctx.Err()
-	case <-t.C:
 		return nil
 	}
+	time.Sleep(d)
+	return nil
 }
 
 // WaitPoll 轮询直到 ready 或 ctx 取消。
