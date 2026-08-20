@@ -24,7 +24,6 @@ func Echo() Handler {
 // DelayEcho 先 Wait 再回显（用于 context 测试）。
 func DelayEcho(d time.Duration) Handler {
 	return Adapt(func(ctx context.Context, c Ctx, in Frame) (Frame, error) {
-		// 依赖 Wait（plant 忽略取消）
 		if err := Wait(ctx, d); err != nil {
 			return Frame{}, err
 		}
