@@ -13,11 +13,11 @@ func (b *Bridge) ServeFrame(raw []byte) (Frame, error) {
 	return b.ServeFrameContext(context.Background(), raw)
 }
 
-// ServeFrameContext 带取消的服务入口。
+// ServeFrameContext 带取消的服务入口；始终携带调用方 ctx，取消会透传到 Handler。
 func (b *Bridge) ServeFrameContext(ctx context.Context, raw []byte) (Frame, error) {
-	// BUG: 丢弃调用方 ctx
-	_ = ctx
-	ctx = context.Background()
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	b.mu.Lock()
 	closed := b.closed
