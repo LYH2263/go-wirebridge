@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wirebridge 管理</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Wirebridge</h1>
+    <p>长度前缀帧 · opcode 路由 · 试帧</p>
+  </header>
+  <main>
+    <section>
+      <h2>路由表</h2>
+      <button id="btn-refresh">刷新</button>
+      <pre id="routes"></pre>
+    </section>
+    <section>
+      <h2>发送试帧</h2>
+      <label>Opcode <input id="opcode" type="number" value="2" /></label>
+      <label>Payload (hex) <input id="payload" value="68656c6c6f" /></label>
+      <label><input id="bypass" type="checkbox" /> Bypass 标志</label>
+      <button id="btn-send">编码并 Serve</button>
+      <pre id="result"></pre>
+    </section>
+    <section>
+      <h2>统计</h2>
+      <pre id="stats"></pre>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
