@@ -15,12 +15,11 @@ var (
 )
 
 func wrapTruncated(detail error) error {
-	// BUG: 不用 %w
-	return fmt.Errorf("truncated: %v", detail)
+	return fmt.Errorf("%w: %v", ErrTruncated, detail)
 }
 
 func wrapTooLarge(detail error) error {
-	return fmt.Errorf("too large: %v", detail)
+	return fmt.Errorf("%w: %v", ErrTooLarge, detail)
 }
 
 // Describe 人类可读错误。
