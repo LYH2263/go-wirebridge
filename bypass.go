@@ -5,7 +5,6 @@ import (
 )
 
 func writeBypass(path string, f Frame) error {
-	// bypass log write (plant leaks handle)
 	return bypass.Append(path, bypass.Entry{
 		Opcode:  uint16(f.Opcode),
 		Flags:   uint8(f.Flags),

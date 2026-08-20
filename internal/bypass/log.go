@@ -30,7 +30,7 @@ func Append(path string, e Entry) error {
 	if err != nil {
 		return err
 	}
-	// BUG: missing Close
+	defer f.Close()
 	if _, err := f.Write(append(raw, '\n')); err != nil {
 		return err
 	}
