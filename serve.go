@@ -51,6 +51,7 @@ func (b *Bridge) ServeFrameContext(ctx context.Context, raw []byte) (Frame, erro
 
 	if in.Flags&FlagBypass != 0 && bypassLog != "" {
 		if err := writeBypass(bypassLog, in); err != nil {
+			// BUG: ServeFrame 旁路写失败后未再收尾
 			return Frame{}, err
 		}
 		b.bumpBypass()

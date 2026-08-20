@@ -30,9 +30,16 @@ func Append(path string, e Entry) error {
 	if err != nil {
 		return err
 	}
-	// BUG: missing Close
+	// BUG: 成功与写失败路径均未 Close
 	if _, err := f.Write(append(raw, '\n')); err != nil {
 		return err
 	}
 	return f.Sync()
+}
+
+// AbortWrite 旁路写失败时的收尾（删除半写入文件）。
+func AbortWrite(path string) error {
+	// BUG: plant 不收尾
+	_ = path
+	return nil
 }
