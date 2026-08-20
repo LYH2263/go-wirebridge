@@ -48,3 +48,9 @@ func (b *Bridge) bumpRejected() {
 	b.stats.Rejected++
 	b.mu.Unlock()
 }
+
+func (b *Bridge) bumpClosed() {
+	b.mu.Lock()
+	b.stats.Closed++
+	b.mu.Unlock()
+}

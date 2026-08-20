@@ -53,4 +53,5 @@ type Stats struct {
 	RouteMiss    uint64
 	DecodeFail   uint64
 	BypassLogged uint64
+	Closed       uint64 // Close 后被灌帧的次数
 }
