@@ -15,13 +15,9 @@ func (b *Bridge) ServeFrame(raw []byte) (Frame, error) {
 
 // ServeFrameContext 带取消的服务入口。
 func (b *Bridge) ServeFrameContext(ctx context.Context, raw []byte) (Frame, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
-	// 入口即检查取消，避免忽略调用方 ctx
-	if err := ctx.Err(); err != nil {
-		return Frame{}, err
-	}
+	// BUG: 丢弃调用方 ctx
+	_ = ctx
+	ctx = context.Background()
 
 	b.mu.Lock()
 	closed := b.closed
