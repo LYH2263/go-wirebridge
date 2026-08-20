@@ -2,12 +2,8 @@ package route
 
 // CloneStrings 深拷贝字符串切片。
 func CloneStrings(in []string) []string {
-	if in == nil {
-		return nil
-	}
-	out := make([]string, len(in))
-	copy(out, in)
-	return out
+	// BUG: 返回共享切片
+	return in
 }
 
 // CloneMeta 深拷贝元数据（含 Tags）。
