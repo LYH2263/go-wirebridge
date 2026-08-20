@@ -48,13 +48,14 @@ func (b *Bridge) ApplyRoutes(rows []RouteMeta) error {
 		}
 		internal = append(internal, toInternal(r))
 	}
-	// BUG: 先 Apply 再持久化；失败仍保留新表
-	b.router.Replace(internal)
+	// 先持久化，成功后再替换内存路由表；持久化失败时内存保持旧表，
+	// 调用方收到错误即可假定整表未变更，避免半成功导致旧 opcode 404。
 	if b.persistPath != "" {
 		if err := b.persistFn(b.persistPath, internal); err != nil {
 			return err
 		}
 	}
+	b.router.Replace(internal)
 	b.dirty = false
 	return nil
 }
