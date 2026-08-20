@@ -12,6 +12,5 @@ func (b *Bridge) TryServe(raw []byte, timeout time.Duration) (Frame, error) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
-	// 仍走 ServeFrameContext（plant 忽略取消）
 	return b.ServeFrameContext(ctx, raw)
 }
