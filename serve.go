@@ -41,8 +41,8 @@ func (b *Bridge) ServeFrameContext(ctx context.Context, raw []byte) (Frame, erro
 		b.bumpDecodeFail()
 		return Frame{}, err
 	}
-	// Payload 必须独立：后续 Handler / 调用方不得污染读缓冲
-	// BUG: skip payload clone
+	// decoded.Payload 已由 Decode 独立拷贝，不别名读缓冲；
+	// 后续 Handler / 调用方经 CloneBytes 再取各自拷贝，互不污染。
 	in := Frame{
 		Flags:   Flags(decoded.Flags),
 		Opcode:  Opcode(decoded.Opcode),

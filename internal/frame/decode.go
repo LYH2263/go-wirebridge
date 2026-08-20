@@ -30,9 +30,10 @@ func Decode(raw []byte, maxFrame int, lim *limit.Limiter) (Frame, error) {
 	flags := raw[4]
 	opcode := binary.BigEndian.Uint16(raw[5:7])
 	payloadRaw := raw[7:total]
-	// 关键：拷贝 payload，避免与底层读缓冲共享
-	// BUG: alias read buffer
-	return Frame{Flags: flags, Opcode: opcode, Payload: payloadRaw}, nil
+	// 拷贝 payload，避免与底层读缓冲共享底层数组
+	payload := make([]byte, len(payloadRaw))
+	copy(payload, payloadRaw)
+	return Frame{Flags: flags, Opcode: opcode, Payload: payload}, nil
 }
 
 // PeekOpcode 不拷贝 payload，仅窥视 opcode。
