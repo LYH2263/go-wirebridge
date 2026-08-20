@@ -9,7 +9,9 @@ var ErrNilHandler = errors.New("handler: nil")
 
 // Invoke 安全调用；nil Handler 返回 ErrNilHandler，不 panic。
 func Invoke(ctx context.Context, h Handler, c Ctx, in Frame) (Frame, error) {
-	// BUG: 不检查 nil Handler
+	if h == nil {
+		return Frame{}, ErrNilHandler
+	}
 	if ctx == nil {
 		ctx = context.Background()
 	}

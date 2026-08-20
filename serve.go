@@ -63,7 +63,11 @@ func (b *Bridge) ServeFrameContext(ctx context.Context, raw []byte) (Frame, erro
 	}
 
 	h := registry.Get(uint16(in.Opcode))
-	// BUG: 未注册 Handler 仍当作非 nil 调用
+	// 路由存在但 Handler 未注册：返回 ErrNilHandler，而非当作非 nil 调用导致 panic
+	if h == nil {
+		b.bumpError()
+		return Frame{}, ErrNilHandler
+	}
 	sctx := &serveCtx{ctx: ctx, op: in.Opcode, bridge: b}
 	out, err := h.Handle(ctx, sctx, handler.Frame{
 		Flags:   uint8(in.Flags),
