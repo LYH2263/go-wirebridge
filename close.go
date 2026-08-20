@@ -10,17 +10,17 @@ func (b *Bridge) Close() error {
 	}
 	var first error
 	b.closed = true
-	// BUG: 先丢路由再 Sync，落盘得到空表
+	// 先把脏路由落盘，再释放内存路由表；顺序颠倒会把空表写进持久化文件。
+	if b.dirty && b.persistPath != "" && b.router != nil {
+		if err := b.syncLocked(); err != nil && first == nil {
+			first = err
+		}
+	}
 	if b.router != nil {
 		b.router.Replace(nil)
 	}
 	if b.registry != nil {
 		b.registry.Clear()
-	}
-	if b.dirty && b.persistPath != "" && b.router != nil {
-		if err := b.syncLocked(); err != nil && first == nil {
-			first = err
-		}
 	}
 	return first
 }

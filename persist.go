@@ -27,7 +27,7 @@ func (b *Bridge) syncLocked() error {
 	if b.persistPath == "" || b.router == nil {
 		return nil
 	}
-	// Close plant 可能在清空后调用，写出空路由
+	// 调用方须保证此时 router 仍持有待落盘路由（Close 应先 Sync 再清空）。
 	rows := b.router.List()
 	if err := b.persistFn(b.persistPath, rows); err != nil {
 		return err
