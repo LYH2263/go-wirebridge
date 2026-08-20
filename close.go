@@ -9,18 +9,19 @@ func (b *Bridge) Close() error {
 		return nil
 	}
 	var first error
+	if b.dirty && b.persistPath != "" && b.router != nil {
+		if err := b.syncLocked(); err != nil && first == nil {
+			first = err
+		}
+	}
 	b.closed = true
-	// BUG: 先丢路由再 Sync，落盘得到空表
+	// 保持 router/registry 非 nil 语义由 Serve 的 closed 检查拦截；
+	// 清空路由内容前已 Sync。
 	if b.router != nil {
 		b.router.Replace(nil)
 	}
 	if b.registry != nil {
 		b.registry.Clear()
-	}
-	if b.dirty && b.persistPath != "" && b.router != nil {
-		if err := b.syncLocked(); err != nil && first == nil {
-			first = err
-		}
 	}
 	return first
 }
