@@ -34,5 +34,16 @@ func Append(path string, e Entry) error {
 	if _, err := f.Write(append(raw, '\n')); err != nil {
 		return err
 	}
-	return f.Sync()
+	if err := f.Sync(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// AbortWrite 旁路写失败时的收尾（删除半写入文件）。
+func AbortWrite(path string) error {
+	if path == "" {
+		return nil
+	}
+	return os.Remove(path)
 }
