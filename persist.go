@@ -27,6 +27,7 @@ func (b *Bridge) syncLocked() error {
 	if b.persistPath == "" || b.router == nil {
 		return nil
 	}
+	// Close plant 可能在清空后调用，写出空路由
 	rows := b.router.List()
 	if err := b.persistFn(b.persistPath, rows); err != nil {
 		return err
