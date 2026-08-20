@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 
-	ierr "example.com/wirebridge/internal/errors"
 	"example.com/wirebridge/internal/limit"
 )
 
@@ -16,11 +15,12 @@ var (
 )
 
 func wrapTruncated(detail error) error {
-	return ierr.Wrap(ErrTruncated, detail)
+	// BUG: 不用 %w
+	return fmt.Errorf("truncated: %v", detail)
 }
 
 func wrapTooLarge(detail error) error {
-	return ierr.Wrap(ErrTooLarge, detail)
+	return fmt.Errorf("too large: %v", detail)
 }
 
 // Describe 人类可读错误。
