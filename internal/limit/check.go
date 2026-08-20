@@ -16,8 +16,7 @@ func (l *Limiter) Check(total int) error {
 		return ierr.Wrap(ErrTooLarge, fmt.Errorf("negative size %d", total))
 	}
 	if max > 0 && total > max {
-		// BUG: 不经 Wrap，直接裸字符串
-		return fmt.Errorf("size %d exceeds max %d", total, max)
+		return ierr.Wrap(ErrTooLarge, fmt.Errorf("size %d exceeds max %d", total, max))
 	}
 	return nil
 }

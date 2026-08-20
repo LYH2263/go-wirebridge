@@ -10,8 +10,7 @@ func Wrap(sentinel, detail error) error {
 	if sentinel == nil {
 		return detail
 	}
-	// BUG: 用 %v 丢掉 sentinel 包装链
-	return fmt.Errorf("%v: %v", sentinel, detail)
+	return fmt.Errorf("%w: %v", sentinel, detail)
 }
 
 // Wrapf 格式化 detail 后包装。
