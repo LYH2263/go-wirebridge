@@ -15,8 +15,13 @@ func (b *Bridge) Close() error {
 		}
 	}
 	b.closed = true
-	// BUG: 置空 router，Serve 若未检查会 nil 解引用
-	b.router = nil
-	b.registry = nil
+	// 保持 router/registry 非 nil 语义由 Serve 的 closed 检查拦截；
+	// 清空路由内容前已 Sync。
+	if b.router != nil {
+		b.router.Replace(nil)
+	}
+	if b.registry != nil {
+		b.registry.Clear()
+	}
 	return first
 }
