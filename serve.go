@@ -63,9 +63,13 @@ func (b *Bridge) ServeFrameContext(ctx context.Context, raw []byte) (Frame, erro
 	}
 
 	h := registry.Get(uint16(in.Opcode))
-	// BUG: 未注册 Handler 仍当作非 nil 调用
+	if h == nil {
+		b.bumpRouteMiss()
+		return Frame{}, ErrNilHandler
+	}
+
 	sctx := &serveCtx{ctx: ctx, op: in.Opcode, bridge: b}
-	out, err := h.Handle(ctx, sctx, handler.Frame{
+	out, err := handler.Invoke(ctx, h, sctx, handler.Frame{
 		Flags:   uint8(in.Flags),
 		Opcode:  uint16(in.Opcode),
 		Payload: buffer.CloneBytes(in.Payload),
