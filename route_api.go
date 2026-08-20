@@ -48,11 +48,10 @@ func (b *Bridge) ApplyRoutes(rows []RouteMeta) error {
 		}
 		internal = append(internal, toInternal(r))
 	}
-	old := b.router.List()
+	// BUG: 先 Apply 再持久化；失败仍保留新表
 	b.router.Replace(internal)
 	if b.persistPath != "" {
 		if err := b.persistFn(b.persistPath, internal); err != nil {
-			b.router.Replace(old)
 			return err
 		}
 	}

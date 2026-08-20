@@ -56,5 +56,6 @@ func (b *Bridge) LoadPersist() error {
 
 // ReloadRoutes 用新表替换并持久化；失败回滚。
 func (b *Bridge) ReloadRoutes(rows []RouteMeta) error {
+	// 与 ApplyRoutes 同路径（plant 半成功）
 	return b.ApplyRoutes(rows)
 }
