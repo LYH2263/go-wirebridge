@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
+	"example.com/wirebridge/internal/buffer"
 	"example.com/wirebridge/internal/limit"
 )
 
@@ -31,8 +32,8 @@ func Decode(raw []byte, maxFrame int, lim *limit.Limiter) (Frame, error) {
 	opcode := binary.BigEndian.Uint16(raw[5:7])
 	payloadRaw := raw[7:total]
 	// 关键：拷贝 payload，避免与底层读缓冲共享
-	// BUG: alias read buffer
-	return Frame{Flags: flags, Opcode: opcode, Payload: payloadRaw}, nil
+	payload := buffer.CloneBytes(payloadRaw)
+	return Frame{Flags: flags, Opcode: opcode, Payload: payload}, nil
 }
 
 // PeekOpcode 不拷贝 payload，仅窥视 opcode。

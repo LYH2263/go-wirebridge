@@ -42,11 +42,11 @@ func (b *Bridge) ServeFrameContext(ctx context.Context, raw []byte) (Frame, erro
 		return Frame{}, err
 	}
 	// Payload 必须独立：后续 Handler / 调用方不得污染读缓冲
-	// BUG: skip payload clone
+	payload := buffer.CloneBytes(decoded.Payload)
 	in := Frame{
 		Flags:   Flags(decoded.Flags),
 		Opcode:  Opcode(decoded.Opcode),
-		Payload: decoded.Payload,
+		Payload: payload,
 	}
 
 	if in.Flags&FlagBypass != 0 && bypassLog != "" {
