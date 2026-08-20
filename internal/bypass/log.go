@@ -30,7 +30,8 @@ func Append(path string, e Entry) error {
 	if err != nil {
 		return err
 	}
-	// BUG: 成功与写失败路径均未 Close
+	// 成功与写失败路径均须 Close 句柄；否则 Windows 上文件被占用、无法删除。
+	defer f.Close()
 	if _, err := f.Write(append(raw, '\n')); err != nil {
 		return err
 	}
@@ -39,7 +40,9 @@ func Append(path string, e Entry) error {
 
 // AbortWrite 旁路写失败时的收尾（删除半写入文件）。
 func AbortWrite(path string) error {
-	// BUG: plant 不收尾
-	_ = path
+	// 文件可能尚未创建或已被删除，视为已清理干净。
+	if err := os.Remove(path); err != nil && !os.IsNotExist(err) {
+		return err
+	}
 	return nil
 }

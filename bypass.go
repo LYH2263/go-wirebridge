@@ -11,7 +11,8 @@ func writeBypass(path string, f Frame) error {
 		Payload: f.Payload,
 	})
 	if err != nil {
-		// BUG: 旁路写失败未调用 AbortWrite 收尾
+		// 写失败须删除半写入文件收尾；收尾错误不覆盖原始写失败原因
+		_ = bypass.AbortWrite(path)
 		return err
 	}
 	return nil
